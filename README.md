@@ -1,4 +1,5 @@
-# Decentralized Drone Delivery Management System (DDDMS)
+# DroneHive
+## A Decentralized Drone Delivery Management System (DDDMS) for Machine IDs
 
 ## Overview
 
