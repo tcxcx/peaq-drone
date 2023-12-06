@@ -1,4 +1,7 @@
 import type { Config } from 'tailwindcss'
+const plugin = require("tailwindcss/plugin")
+const flattenColorPalette = require("tailwindcss/lib/util/flattenColorPalette")
+const svgToDataUri = require("mini-svg-data-uri")
 
 const config: Config = {
   content: [
@@ -11,6 +14,9 @@ const config: Config = {
       colors: {
         'gray-bg': '#303334',
         'basement-green': '#00ff6a',
+        'basement-purple': '#4c09f6',
+        'basement-indigo': '#a370ff',
+        'basement-tone-purple': '#5e22f7',
         'black-tr': 'rgba(0, 0, 0, 0.95)',
       },
       backgroundImage: {
@@ -26,6 +32,34 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ matchUtilities, theme }: { matchUtilities: any, theme: any }) {
+      matchUtilities(
+        {
+          "bg-grid": (value: any) => ({
+            backgroundImage: `url("${svgToDataUri(
+              `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" stroke="${value}" fill="none"><path d="M64 0H0V64"/></svg>`,
+            )}")`,
+          }),
+        },
+        {
+          values: flattenColorPalette(theme("backgroundColor")),
+          type: ["color"],
+        },
+      )
+
+      matchUtilities(
+        {
+          "bg-grid": (value: any) => ({
+            backgroundSize: value,
+          }),
+        },
+        {
+          values: theme("spacing"),
+          type: ["number", "length", "any"],
+        },
+      )
+    }),
+  ],
 }
 export default config
