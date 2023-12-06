@@ -16,7 +16,7 @@ const Marketplace = () => {
   }, [walletAddress, jwtToken, router]);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 z-10">
       <header className="flex justify-between items-center py-4">
         <h1 className="text-2xl font-bold">Marketplace Dashboard</h1>
         <span className="text-sm">Connected as: {walletAddress}</span>
@@ -30,7 +30,7 @@ const Marketplace = () => {
             <div key={item} className="border rounded-lg p-4 shadow-sm">
               <h3 className="font-bold text-lg">Item {item}</h3>
               <p className="text-gray-600">Description of item {item}...</p>
-              <button className="mt-2 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">
+              <button className="mt-2 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-900 transition duration-300">
                 Buy Item
               </button>
             </div>
