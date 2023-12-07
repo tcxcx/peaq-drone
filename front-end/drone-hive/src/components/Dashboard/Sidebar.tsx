@@ -24,9 +24,8 @@ export const Sidebar: React.FC = () => {
   const menuItems: MenuItem[] = [
     { icon: Home, label: "Home", path: "/" },
     { icon: ThumbsUpIcon, label: "Marketplace", path: "/marketplace" },
-    { icon: LampDeskIcon, label: "Orders", path: "/marketplace/orders" },
-    { icon: User, label: "Add Drone", path: "/marketplace/new-drone-order" },
-    { icon: HelpCircle, label: "Help", path: "/help" },
+    { icon: LampDeskIcon, label: "Orders", path: "/marketplace/my-orders" },
+    { icon: User, label: "My Drones", path: "/marketplace/my-orders/new-drone-order" },
   ];
 
   return (

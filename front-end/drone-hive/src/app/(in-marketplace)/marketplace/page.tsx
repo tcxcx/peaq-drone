@@ -1,29 +1,15 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import useWalletStore from '@/hooks/context/useWalletStore';
-import { useEffect } from 'react';
+import { useRouter } from "next/navigation";
 
 const Marketplace = () => {
   const router = useRouter();
-  const { walletAddress, jwtToken } = useWalletStore();
 
-  useEffect(() => {
-    // Redirect if not authenticated
-    if (!walletAddress || !jwtToken) {
-      router.push('/log-in');
-    }
-  }, [walletAddress, jwtToken, router]);
 
   return (
-    <div className="container mx-auto p-4 z-10">
-      <header className="flex justify-between items-center py-4">
-        <h1 className="text-2xl font-bold">Marketplace Dashboard</h1>
-        <span className="text-sm">Connected as: {walletAddress}</span>
-      </header>
-
+    <>
       <section className="mt-8">
-        <h2 className="text-xl font-semibold mb-4">Available Items</h2>
+        <h2 className="text-xl font-semibold mb-4">Available Drones</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Placeholder for marketplace items */}
           {[1, 2, 3].map((item) => (
@@ -45,7 +31,7 @@ const Marketplace = () => {
           <p>Your recent activities will appear here...</p>
         </div>
       </section>
-    </div>
+    </>
   );
 };
 
