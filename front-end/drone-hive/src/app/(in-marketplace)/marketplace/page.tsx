@@ -10,16 +10,18 @@ export interface DronesListed {
   ownerWalletAddress: string;
   title: string;
   description: string;
+  imageUrl?: string;
 }
 
-const Marketplace: React.FC = () => {
-  const { data } = useQuery({
-    queryKey: ["DronesListed"],
-    queryFn: async () => {
-      const { data } = await axios.get("http://localhost:5000/drone-listing");
-      return data;
-    },
-  });
+  const Marketplace: React.FC = () => {
+    const { data } = useQuery({
+      queryKey: ["DronesListed"],
+      queryFn: async () => {
+        const { data } = await axios.get("http://localhost:5000/drone-listing");
+        return data;
+      },
+    });
+  
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
@@ -28,6 +30,13 @@ const Marketplace: React.FC = () => {
           key={drone.droneId}
           className="bg-transparent border border-white rounded-lg shadow-md p-4"
         >
+          {drone.imageUrl && (
+            <img
+              src={drone.imageUrl}
+              alt={drone.title}
+              className="mb-4 w-full h-auto object-cover rounded"
+            />
+          )}
           <div className="card-content mb-4">
             <h3 className="text-xl font-ribbon font-semibold mb-2">
               {drone.title}

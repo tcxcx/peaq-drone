@@ -1,36 +1,63 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import axios from 'axios';
-import useWalletStore from '@/hooks/context/useWalletStore';
+import React, { ChangeEvent, useState } from "react";
+import axios from "axios";
+import useWalletStore from "@/hooks/context/useWalletStore";
 
 const NewOrder: React.FC = () => {
   const { walletAddress } = useWalletStore();
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+
+  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      if (file && file.type === "image/png") {
+        setImage(file);
+      } else {
+        alert("Please select a PNG image.");
+      }
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     if (!walletAddress) {
-      alert('Wallet address is not available');
+      alert("Wallet address is not available");
       return;
     }
 
-    try {
-      const response = await axios.post('http://localhost:5000/drone-listing', {
-        ownerWalletAddress: walletAddress,
-        title,
-        description,
-      });
+    const formData = new FormData();
+    formData.append("ownerWalletAddress", walletAddress);
+    formData.append("title", title);
+    formData.append("description", description);
+    if (image) {
+      console.log("Uploading Image:", image.name);
+      formData.append("image", image);
+    }
+    
 
-      console.log(response.data); // handle response
-      setTitle('');
-      setDescription('');
-      alert('Drone registered successfully!');
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/drone-listing",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log(response.data);
+      setTitle("");
+      setDescription("");
+      setImage(null);
+      alert("Drone registered successfully!");
     } catch (error) {
       console.error(error);
-      alert('Failed to register drone');
+      alert("Failed to register drone");
     }
   };
 
@@ -40,7 +67,9 @@ const NewOrder: React.FC = () => {
         <h2 className="text-2xl font-semibold mb-6">Register a New Drone</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-300">Title:</label>
+            <label className="block text-sm font-medium text-gray-300">
+              Title:
+            </label>
             <input
               type="text"
               className="w-full px-3 py-2 bg-gray-700 text-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
@@ -50,12 +79,22 @@ const NewOrder: React.FC = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-300">Description:</label>
+            <label className="block text-sm font-medium text-gray-300">
+              Description:
+            </label>
             <textarea
               className="w-full px-3 py-2 bg-gray-700 text-gray-200 rounded-lg focus:outline-none focus:border-blue-500"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
+            />
+          </div>
+          <div>
+            <label>Drone Image (PNG):</label>
+            <input
+              type="file"
+              onChange={handleImageChange}
+              accept="image/png"
             />
           </div>
           <button
