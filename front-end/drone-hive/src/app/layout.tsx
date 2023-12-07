@@ -3,7 +3,8 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "./styles/globals.css";
 import { Toaster } from "sonner";
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from "@vercel/analytics/react";
+import TanstackProvider from "@/libs/TanstackProviders";
 
 export const metadata: Metadata = {
   title: "Peaq Network Technical Task",
@@ -18,9 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body>
-        {children}
-        <Analytics />
-        <Toaster />
+        <TanstackProvider>
+          {children}
+          <Analytics />
+          <Toaster />
+        </TanstackProvider>
       </body>
     </html>
   );

@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require("cors");
 const { createClient } = require('@supabase/supabase-js');
+// const verifyToken = require('./routes/auth/jwt-verify');
 
 // Initialize Supabase client
 const supabaseUrl = process.env.SUPABASE_URL
@@ -29,9 +30,12 @@ function asyncHandler(fn) {
 
 // Drone Listing Routes
 const droneList = require("./routes/drone-register/drone-listing");
+const droneReview = require("./routes/drone-register/drone-review");
 
 // Use the routes
 app.use('/drone-listing', asyncHandler(droneList));
+app.use('/drone-review', asyncHandler(droneReview));
+
 
 // Error Handler
 app.use((err, req, res, next) => {
