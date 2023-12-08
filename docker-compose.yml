@@ -1,0 +1,15 @@
+version: '3'
+services:
+  frontend:
+    build: ./front-end/drone-hive
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+
+  backend:
+    build: ./back-end
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production

@@ -1,4 +1,5 @@
 # DroneHive
+
 ## A Decentralized Drone Delivery Management System (DDDMS) for Machine IDs
 
 ## Overview
@@ -17,9 +18,9 @@ The Decentralized Drone Delivery Management System (DDDMS) is a cutting-edge, bl
 
 ## Technologies Used
 
-- **Frontend:** Next.js 14, Tailwind CSS, Framer Motion
-- **Backend:** Express.js, Supabase Auth, Database and Real-time features
-- **Blockchain:** Peaq network js sdk.
+- **Frontend:** Next.js 14, Tailwind CSS, Framer Motion, SIWS Substrate Login.
+- **Backend:** Express.js, Supabase Storage, Database and Real-time features
+- **Blockchain:** Peaq Network javascript sdk.
 - **Others:** Redis (caching), Docker (containerization), Lightweight Charts (analytics), GPS and IoT integration (pending)
 
 ## Getting Started
@@ -28,11 +29,52 @@ The Decentralized Drone Delivery Management System (DDDMS) is a cutting-edge, bl
 
 - Node.js
 - Docker (for containerization)
-- A blockchain wallet like MetaMask (for blockchain functionalities)
+- A blockchain wallet like Polkadot.js for Substrate-based sign-in using SIWS (for blockchain functionalities).
 
-### Installation
+### Docker Installation
+
+The **Docker** setup for the DroneHive project includes configurations for both the front-end and back-end services. It is defined using a docker-compose.yml file and individual Dockerfile files for each service within each repository.
+
+1. Clone the repository monorepo:
+2. Run the following command in the terminal:
+
+   ```bash
+   docker-compose build --no-cache
+
+   ```
+
+3. And then run the following command:
+
+   ```bash
+   docker-compose up --build
+
+   ```
+
+4. Wait for both Next.js and Express.js microservices to run in port :3000 and :5000 respectively.
+
+### Development Environment Installation
 
 1. Clone the repository:
 2. Navigate to the project directory front-end and backend
 3. Install dependencies (yarn on frontend) (npm start on backend)
 4. Set up environment variables: Rename .env.example to .env and fill in the necessary details.
+
+### Honorable Mentions
+
+Special thanks for the inspiration to the teams at:
+
+- **SIWS Talisman**
+
+  - **GitHub**: [SIWS GitHub](https://github.com/TalismanSociety/siws)
+  - **Website**: [SIWS Official Website](https://siws.xyz/)
+
+- **Supabase**
+
+  - **GitHub**: [SIWS GitHub](https://github.com/supabase/supabase-js)
+  - **Website**: [SIWS Official Website](https://supabase.com/)
+
+- **Ribbon Finance**
+  - **GitHub**: [Ribbon Finance GitHub](https://github.com/riribbonbbon-finance)
+  - **Website**: [Ribbon Finance Official Website](https://ribbon.finance/)
+
+Their innovative approaches and cutting-edge solutions have been a significant source of inspiration for this technical task work.
