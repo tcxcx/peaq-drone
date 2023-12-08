@@ -21,7 +21,7 @@ export default function AuthLayout({
     <>
       {/* Left panel component */}
       <div className="flex flex-col md:flex-row h-screen">
-        <div className="w-full h-full lg:w-1/2 py-0 px-8 md:px-16 lg:px-20 xl:px-40 bg-zinc-900/5">
+        <div className="w-full h-full lg:w-1/2 py-0 px-10 bg-zinc-900/5">
           {children}
         </div>
 

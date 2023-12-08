@@ -35,9 +35,11 @@ export const ConnectWallet: React.FC<Props> = ({ onAccounts }) => {
   };
 
   return (
-    <div className="flex flex-col z-10">
-      <p className="text-white text-lg font-ribbon uppercase">Sign in here</p>
-      <p className="text-stone-500 mb-4">Connect your wallet here.</p>
+    <div className="flex flex-col items-center justify-center z-10 h-full">
+      <p className="text-white text-lg font-ribbon uppercase animate-pulse">Sign in here</p>
+      <p className="text-sm text-gray-600 mb-4 text-center">
+        Connect your Substrate-based wallet to continue.
+      </p>
       <ButtonRight
         onClick={handleConnectWallet}
         disabled={connecting}

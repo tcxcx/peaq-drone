@@ -1,49 +1,76 @@
-import React, { useState, useEffect } from "react";
+"use client";
+
+import React, { ChangeEvent, useState, useEffect } from "react";
+import axios from "axios";
 import useWalletStore from "@/hooks/context/useWalletStore";
-
-interface Drone {
-  droneId: string;
-  title: string;
-  description: string;
-  imageUrl: string;
-}
-
-interface EditDroneModalProps {
-  drone: Drone;
+import { toast } from "sonner";
+interface NewDroneModalProps {
   onClose: () => void;
-  onSave: (droneId: string, updatedData: FormData) => void;
+  onSave: (newData: FormData) => void;
 }
 
-export const EditDroneModal: React.FC<EditDroneModalProps> = ({
-  drone,
+export const NewDroneModal: React.FC<NewDroneModalProps> = ({
   onClose,
   onSave,
 }) => {
-  const [title, setTitle] = useState(drone.title);
-  const [description, setDescription] = useState(drone.description);
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const { jwtToken } = useWalletStore.getState();
+    const { walletAddress } = useWalletStore();
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [image, setImage] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
 
+    const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files && event.target.files.length > 0) {
+        const file = event.target.files[0];
+        if (file && file.type === "image/png") {
+          setImage(file);
+        } else {
+          toast.error("Please select a PNG image.");
+        }
+      }
+    };
+  
+    const handleSubmit = async (event: React.FormEvent) => {
+      event.preventDefault();
+  
+      if (!walletAddress) {
+        toast.error("Wallet address is not available");
+        return;
+      }
+  
+      const formData = new FormData();
+      formData.append("ownerWalletAddress", walletAddress);
+      formData.append("title", title);
+      formData.append("description", description);
+      if (image) {
+        console.log("Uploading Image:", image.name);
+        formData.append("image", image);
+      }
+      
+  
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/drone-listing",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+  
+        console.log(response.data);
+        setTitle("");
+        setDescription("");
+        setImage(null);
+        toast.success("Drone registered successfully!");
+        onClose()
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to register drone");
+      }
+    };
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setImage(event.target.files[0]);
-    }
-  };
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    if (image) {
-      formData.append("image", image);
-    }
-
-    onSave(drone.droneId, formData);
-  };
 
   useEffect(() => {
     if (image) {
@@ -56,6 +83,7 @@ export const EditDroneModal: React.FC<EditDroneModalProps> = ({
       setImagePreview(null);
     }
   }, [image]);
+
 
   return (
     <div className="fixed inset-0 bg-black-tr bg-opacity-80 flex justify-center items-center z-50">
@@ -149,4 +177,3 @@ export const EditDroneModal: React.FC<EditDroneModalProps> = ({
     </div>
   );
 };
-

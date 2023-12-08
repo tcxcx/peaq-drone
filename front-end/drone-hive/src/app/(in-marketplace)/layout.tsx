@@ -38,8 +38,8 @@ export default function DashboardLayout({
           <Sidebar />
         </div>
 
-        {/* Right panel component */}
-        <div className="block relative lg:w-full bg-zinc-900/10 z-10">
+    {/* Right panel component */}
+    <div className="flex-1 overflow-auto relative bg-zinc-900/10 z-10">
           <div className="absolute -z-10 inset-0 bg-grid-white/10 bg-grid-16 [mask-image:linear-gradient(180deg,black,transparent)]"></div>
           <div className="container mx-auto p-4">
             <header className="flex justify-between items-center py-4">

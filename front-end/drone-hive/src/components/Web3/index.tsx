@@ -8,6 +8,7 @@ import { Profile } from "./Profile";
 import { GridPattern } from "../UI/GridPattern";
 import useWalletStore from '@/hooks/context/useWalletStore'
 
+
 export const Wallet = () => {
   const [signedInWith, setSignedInWith] = useState<
     InjectedAccountWithMeta | undefined

@@ -1,98 +1,108 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import useWalletStore from "@/hooks/context/useWalletStore";
-import useDroneStore from "@/hooks/context/useDroneStore";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { EditDroneModal } from '@/components/Dashboard/EditDroneModal';
+import { EditDroneModal } from "@/components/Dashboard/EditDroneModal";
+import useWalletStore from "@/hooks/context/useWalletStore";
+import useDroneActions from "@/hooks/CRUD/useDroneActions.js";
+import useFetchUserDrones from "@/hooks/CRUD/useFetchUserDrones";
+import { Skeleton } from "@/components/UI/skeleton";
+import { NewDroneModal } from "@/components/Dashboard/NewDroneModal";
+
+type Drone = {
+  droneId: string;
+  title: string;
+  description: string;
+  ownerWalletAddress: string;
+  imageUrl?: string;
+};
 
 const UserDrones: React.FC = () => {
-  const { walletAddress, jwtToken } = useWalletStore();
-  const { drones, setDrones, deleteDrone } = useDroneStore();
+  const { walletAddress } = useWalletStore();
+  const { deleteDroneById, editDrone } = useDroneActions();
+  const { data: drones, isLoading } = useFetchUserDrones(walletAddress);
   const router = useRouter();
-  const [editingDrone, setEditingDrone] = useState(null);
+  const [editingDrone, setEditingDrone] = useState<Drone | null>(null);
+  const [creatingDrone, setCreatingDrone] = useState(false);
 
-  useEffect(() => {
-    const fetchUserDrones = async () => {
-      try {
-        const { data } = await axios.get(
-          `http://localhost:5000/drone-listing/user/${walletAddress}`
-        );
-        setDrones(data);
-      } catch (error) {
-        console.error("Failed to fetch user's drones:", error);
-      }
-    };
+  const isDronesArray = Array.isArray(drones);
 
-    if (walletAddress) {
-      fetchUserDrones();
-    }
-  }, [walletAddress, setDrones]);
+  const handleEditClick = (drone: Drone) => {
+    setEditingDrone(drone);
+  };
 
-  const handleDelete = async (droneId: string) => {
-    console.log("Sending JWT Token:", jwtToken);
-    try {
-      await axios.delete(`http://localhost:5000/drone-listing/${droneId}`, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}` 
-        }
-      });
-      deleteDrone(droneId);
-      alert("Drone deleted successfully");
-    } catch (error) {
-      console.error("Failed to delete drone:", error);
-    }
+  const handleNewDrone = async (newData: FormData) => {
+    setCreatingDrone(false);
   };
 
   const handleSaveEdit = async (droneId: string, updatedData: FormData) => {
-    try {
-      const { data } = await axios.put(`http://localhost:5000/drone-listing/${droneId}`, updatedData, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`
-        }
-      });
-      console.log('JWT Token Edit:', jwtToken);
-      setDrones(drones.map(drone => drone.droneId === droneId ? { ...drone, ...updatedData } : drone));
-      setEditingDrone(null);
-      alert("Drone updated successfully");
-    } catch (error) {
-      console.error("Failed to update drone:", error);
-    }
+    await editDrone(droneId, updatedData);
+    setEditingDrone(null);
   };
 
-  const handleEditClick = (drone: any) => {
-    setEditingDrone(drone);
+  const handleDelete = async (droneId: string) => {
+    await deleteDroneById(droneId);
   };
 
   const navigateToNewOrder = () => {
     router.push("/marketplace/user-drones/new-drone-order");
   };
+  
 
-  if (!drones.length) {
+  if (isLoading) {
+    const skeletonCount = 4; // Declare skeletonCount before using it
+    return (
+      <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {Array.from({ length: skeletonCount }, (_, index) => (
+          <Skeleton key={index} className="h-60" />
+        ))}
+      </div>
+    );
+  }
+
+  if (!isDronesArray || drones.length === 0) {
     return <div className="text-white">No drones found.</div>;
   }
 
   return (
-    <div>
-      <button
-        onClick={navigateToNewOrder}
-        className="mb-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
-      >
-        Create New Drone
-      </button>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-        {drones.map((drone) => (
-          <div key={drone.droneId} className="bg-gray-800 rounded-lg shadow-lg p-4">
-            <h3 className="text-xl text-white font-semibold mb-2">{drone.title}</h3>
-            <p className="text-gray-300">{drone.description}</p>
+    <div className="container mx-auto p-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <button
+          onClick={() => setCreatingDrone(true)}
+          className="bg-transparent border font-ribbon uppercase hover:animate-pulse border-basement-purple hover:bg-basement-purple/20 text-white font-bold py-2 px-4 rounded-lg"
+        >
+          Create New Drone
+        </button>
+        {drones.map((drone: Drone) => (
+          <div
+            key={drone.droneId}
+            className="bg-transparent border border-white rounded-lg shadow-md p-4 flex flex-col"
+          >
+            {drone.imageUrl && (
+              <img
+                src={drone.imageUrl}
+                alt={drone.title}
+                className="mb-4 w-full h-48 object-cover rounded"
+              />
+            )}
+            <div className="flex-grow mb-4">
+              <h3 className="text-xl font-ribbon font-semibold mb-2 text-white">
+                {drone.title}
+              </h3>
+              <p className="text-gray-300">{drone.description}</p>
+            </div>
             {drone.ownerWalletAddress === walletAddress && (
-              <div className="flex space-x-2 mt-4">
-                <button onClick={() => handleEditClick(drone)} className="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600 transition duration-300">
+              <div className="flex space-x-2 mt-4 justify-end">
+                <button
+                  onClick={() => handleEditClick(drone)}
+                  className="bg-transparent border font-ribbon uppercase hover:animate-pulse border-basement-purple hover:bg-basement-purple/20 text-white font-bold py-2 px-4 rounded"
+                >
                   Edit
                 </button>
-                <button onClick={() => handleDelete(drone.droneId)} className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-300">
+                <button
+                  onClick={() => handleDelete(drone.droneId)}
+                  className="bg-transparent border font-ribbon uppercase hover:animate-pulse border-basement-purple hover:bg-basement-purple/20 text-white font-bold py-2 px-4 rounded"
+                >
                   Delete
                 </button>
               </div>
@@ -100,12 +110,22 @@ const UserDrones: React.FC = () => {
           </div>
         ))}
       </div>
-
       {editingDrone && (
         <EditDroneModal
-          drone={editingDrone}
+          drone={{
+            droneId: editingDrone.droneId,
+            title: editingDrone.title,
+            description: editingDrone.description,
+            imageUrl: editingDrone.imageUrl || "",
+          }}
           onClose={() => setEditingDrone(null)}
           onSave={handleSaveEdit}
+        />
+      )}
+      {creatingDrone && (
+        <NewDroneModal
+          onClose={() => setCreatingDrone(false)}
+          onSave={handleNewDrone}
         />
       )}
     </div>

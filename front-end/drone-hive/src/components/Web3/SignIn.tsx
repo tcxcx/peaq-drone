@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
-import Button from "@/components/UI/Button";
 import { Address, SiwsMessage } from "@talismn/siws";
 import { Account } from "./Account";
 import { SIWS_DOMAIN } from "@/libs/constants";
@@ -23,11 +22,10 @@ export const SignIn: React.FC<Props> = ({ accounts, onCancel, onSignedIn }) => {
       if (!selectedAccount) throw new Error("No account selected!");
 
       const address = await Address.fromSs58(selectedAccount.address ?? "");
-      if (!address) return;
-      toast.error(
-        "Invalid address: Your address is not a valid Substrate address."
-      );
-
+      if (!address)
+        throw new Error(
+          "Invalid address: Your address is not a valid Substrate address."
+        );
       setSigningIn(true);
       // request nonce from server
       const nonceRes = await fetch("/api/nonce");
@@ -42,8 +40,8 @@ export const SignIn: React.FC<Props> = ({ accounts, onCancel, onSignedIn }) => {
         nonce,
         statement: "",
         chainName: "Polkadot",
-        // expires in 2 mins
-        expirationTime: new Date().getTime() + 2 * 60 * 1000,
+        // expires in 15 mins
+        expirationTime: new Date().getTime() + 15 * 60 * 1000,
       });
 
       const { web3FromSource } = await import("@polkadot/extension-dapp");
@@ -77,9 +75,6 @@ export const SignIn: React.FC<Props> = ({ accounts, onCancel, onSignedIn }) => {
       setSigningIn(false);
     }
   };
-
-  // note to self
-  // dismiss toast when sign in flow is exited
 
   return (
     <div className="h-full flex flex-1 flex-col">
@@ -127,14 +122,25 @@ export const SignIn: React.FC<Props> = ({ accounts, onCancel, onSignedIn }) => {
           </p>
         )}
       </div>
-      <div className="flex justify-center items-center">
-        <Button text="Cancel" onClick={onCancel} />
+      <div className="flex justify-end items-center gap-4 z-10">
+        <button
+          onClick={onCancel}
+          className="bg-transparent border  border-basement-purple hover:bg-basement-purple hover:animate-pulse text-white font-bold py-2 px-4 rounded uppercase font-ribbon text-sm"
+        >
+          Cancel
+        </button>
 
-        <Button
+        <button
           disabled={!selectedAccount || signingIn}
           onClick={handleSignIn}
-          text={signingIn ? "Signing In..." : "Sign In"}
-        />
+          className={`bg-transparent border border-basement-purple ${
+            !selectedAccount || signingIn
+              ? "opacity-50 cursor-not-allowed"
+              : "border-basement-purple  hover:animate-pulse hover:bg-basement-purple"
+          } text-white font-bold py-2 px-4 rounded uppercase font-ribbon text-sm`}
+        >
+          {signingIn ? "Signing In..." : "Sign In"}
+        </button>
       </div>
     </div>
   );

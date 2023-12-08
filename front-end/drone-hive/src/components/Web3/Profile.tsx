@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from "react";
 import truncateMiddle from "truncate-middle";
@@ -11,37 +11,36 @@ import { Skeleton } from "@/components/UI/skeleton";
 import { copyToClipboard } from "@/libs/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-
+import useWalletStore from "@/hooks/context/useWalletStore";
 
 type Props = {
   account: InjectedAccountWithMeta;
-  jwtToken: string;
+  jwtToken: string; 
   onSignOut: () => void;
 };
 
-export const Profile: React.FC<Props> = ({ account, jwtToken, onSignOut }) => {
+export const Profile: React.FC<Props> = ({ account, onSignOut }) => {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { walletAddress, jwtToken, clearWallet } = useWalletStore();
 
   const { loading } = useProtectedService();
 
   useEffect(() => {
-    // Replace this with your actual logic to check JWT token and account
-    const jwtToken = localStorage.getItem('jwtToken'); // Example, store and retrieve JWT token securely
-    const account = localStorage.getItem('account'); // Example, store and retrieve account securely
-
-    if (!jwtToken || !account) {
-      // Redirect to login if not authenticated
-      router.push('/log-in');
-    } else {
-      setIsAuthenticated(true);
+    if (!jwtToken || !walletAddress) {
+      router.push("/log-in");
     }
-  }, [router]);
+  }, [jwtToken, walletAddress, router]);
+
+  const handleSignOut = () => {
+    clearWallet();
+    onSignOut();
+  };
 
   const goToDashboard = () => {
     if (jwtToken && account) {
       // Navigate to the /marketplace route
-      router.push('/marketplace');
+      router.push("/marketplace");
     } else {
       toast.error("You need to be signed in to access the dashboard.");
     }
@@ -49,38 +48,38 @@ export const Profile: React.FC<Props> = ({ account, jwtToken, onSignOut }) => {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between p-4 bg-basement-tone-purple rounded-md">
+        <div className="flex items-center gap-4 z-10">
           <Identicon value={account.address} size={32} theme="polkadot" />
-          <div className="flex flex-col">
-            <div className="text-white/90 hover:text-basement-white font-bold text-lg font-ribbon">{account.meta.name}</div>
-            <div className="text-stone-500 text-xs font-ribbon">
+          <div>
+            <div className="text-white font-bold">{account.meta.name}</div>
+            <div className="text-stone-400 text-xs">
               {truncateMiddle(account.address, 5, 5, "...")}
             </div>
           </div>
         </div>
-
-        <ExitIcon onClick={onSignOut} className="z-10 cursor-pointer" />
+        <ExitIcon
+          onClick={onSignOut}
+          className="cursor-pointer text-white z-10"
+        />
       </div>
-      <p className="text-basement-tone-purple  mt-4 text-2xl uppercase font-ribbon animate-pulse text-right">
-        Access granted
-      </p>
-      <p className="text-stone-200/60 mt-4 text-xl uppercase font-ribbon text-center">
-        Welcome to{" "}
-        <span className="text-basement-tone-purple hover:text-basement-white font-bold">Drone Hive</span>{" "}
-      </p>
-      <p className="text-stone-200 mt-4 text-sm">
-        You are securely signed in with your Polkadot account.
-        <br />
-        Now you can go to the dashboard.
-      </p>
-
-      <div className="grid gap-3 mt-4">
-        <div className="text-center items-center justify-center mt-4">
-          <Button text="Go to Dashboard" onClick={goToDashboard} />
+      <div className="mt-4 p-4 bg-white/5 rounded-md shadow my-4">
+        <div className="py-4">
+          <h2 className="text-lg text-basement-indigo text-center font-semibold font-ribbon uppercase animate-pulse">
+            Access Granted
+          </h2>
+          <p className="mt-4 text-sm text-gray-500">
+            Welcome to <span className="font-ribbon uppercase">Drone Hive</span>
+            . You are securely signed in with your Polkadot account.
+          </p>
+          <p className="mt-1 text-sm text-gray-500">
+            Now you can go to the dashboard.
+          </p>
         </div>
       </div>
-
+      <div className="flex mt-2 justify-center">
+        <Button text="Go to Dashboard" onClick={goToDashboard} />
+      </div>
     </div>
   );
 };
