@@ -5,6 +5,7 @@ const { createClient } = require("@supabase/supabase-js");
 const { body, validationResult } = require("express-validator");
 const multer = require("multer");
 const fs = require("fs").promises;
+const verifyToken = require("../auth/jwt-verify");
 
 const upload = multer({ dest: "uploads/" });
 const supabase = createClient(
@@ -27,22 +28,21 @@ const uploadImageToSupabase = async (imageFile) => {
 // Fetch All Drones
 // This endpoint retrieves all the drones listed in the database.
 router.get("/", async (req, res) => {
-    try {
-      let { data: drones, error } = await supabase.from("Drones").select("*");
-      if (error) throw error;
-      drones = drones.map(drone => {
-        if (drone.imagePath) {
-            // https://tdbuogudqjkikprfmrxr.supabase.co/storage/v1/object/public/drone-images/1701972027016_drone-bg.png
-          drone.imageUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/drone-images/${drone.imagePath}`;
-        }
-        return drone;
-      });
-      res.status(200).json(drones);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });
-  
+  try {
+    let { data: drones, error } = await supabase.from("Drones").select("*");
+    if (error) throw error;
+    drones = drones.map((drone) => {
+      if (drone.imagePath) {
+        // https://tdbuogudqjkikprfmrxr.supabase.co/storage/v1/object/public/drone-images/1701972027016_drone-bg.png
+        drone.imageUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/drone-images/${drone.imagePath}`;
+      }
+      return drone;
+    });
+    res.status(200).json(drones);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // Create a New Drone
 // This endpoint allows a user to register a new drone.
@@ -82,65 +82,74 @@ router.post(
 );
 
 // Update a Drone
-// This endpoint allows updating details of an existing drone.
-
-router.put(
-    "/:droneId",
-    upload.single("image"),
-    body("ownerWalletAddress").optional().isString(),
-    body("title").optional().isString(),
-    body("description").optional().isString(),
-    async (req, res) => {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
-  
-      const { droneId } = req.params;
-      const updates = req.body;
-  
-      let imagePath = null;
-      if (req.file) {
-        try {
-          imagePath = await uploadImageToSupabase(req.file);
-          updates.imagePath = imagePath;
-        } catch (error) {
-          console.error("Error uploading image:", error);
-          return res.status(500).json({ error: "Failed to upload image" });
-        }
-      }
-  
-      try {
-        const { data, error } = await supabase
-          .from("Drones")
-          .update(updates)
-          .match({ droneId });
-  
-        if (error) throw error;
-  
-        res.status(200).json(data);
-      } catch (error) {
-        res.status(500).json({ error: error.message });
-      }
-    }
-  );
-  
-  module.exports = router;
-
-// Delete a Drone
-// This endpoint allows a user to delete their drone.
-
-router.delete("/:droneId", async (req, res) => {
+router.put("/:droneId", verifyToken, upload.single("image"), async (req, res) => {
   const { droneId } = req.params;
+  const { title, description } = req.body;
+
+  // Fetch current drone data
+  const { data: currentDrone, error: droneFetchError } = await supabase
+    .from("Drones")
+    .select("*")
+    .eq("droneId", droneId)
+    .single();
+
+  if (droneFetchError || !currentDrone) {
+    return res.status(404).json({ error: "Drone not found" });
+  }
+
+  // Check if the authenticated user is the owner of the drone
+  if (req.user.substrateAddress !== currentDrone.ownerWalletAddress) {
+    return res.status(403).json({ error: "Unauthorized to update this drone" });
+  }
+
+  let updates = { title, description };
+  if (req.file) {
+    // Handle image upload
+    try {
+      const imagePath = await uploadImageToSupabase(req.file);
+      updates.imagePath = imagePath;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      return res.status(500).json({ error: "Failed to upload image" });
+    }
+  }
 
   try {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("Drones")
-      .delete()
+      .update(updates)
       .match({ droneId });
 
     if (error) throw error;
+    res.status(200).json({ message: "Drone updated successfully." });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
+
+// Delete a Drone
+
+router.delete("/:droneId", verifyToken, async (req, res) => {
+  const { droneId } = req.params;
+  const { data: currentDrone, error: droneFetchError } = await supabase
+    .from("Drones")
+    .select("*")
+    .eq("droneId", droneId)
+    .single();
+
+  if (droneFetchError || !currentDrone) {
+    return res.status(404).json({ error: "Drone not found" });
+  }
+
+  if (req.user.substrateAddress !== currentDrone.ownerWalletAddress) {
+    return res.status(403).json({ error: "Unauthorized to delete this drone" });
+  }
+
+  try {
+    const { error } = await supabase.from("Drones").delete().match({ droneId });
+
+    if (error) throw error;
     res.status(200).json({ message: "Drone deleted successfully." });
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { EditDroneModal } from '@/components/Dashboard/EditDroneModal';
 
 const UserDrones: React.FC = () => {
-  const { walletAddress } = useWalletStore();
+  const { walletAddress, jwtToken } = useWalletStore();
   const { drones, setDrones, deleteDrone } = useDroneStore();
   const router = useRouter();
   const [editingDrone, setEditingDrone] = useState(null);
@@ -31,8 +31,13 @@ const UserDrones: React.FC = () => {
   }, [walletAddress, setDrones]);
 
   const handleDelete = async (droneId: string) => {
+    console.log("Sending JWT Token:", jwtToken);
     try {
-      await axios.delete(`http://localhost:5000/drone-listing/${droneId}`);
+      await axios.delete(`http://localhost:5000/drone-listing/${droneId}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}` 
+        }
+      });
       deleteDrone(droneId);
       alert("Drone deleted successfully");
     } catch (error) {
@@ -40,13 +45,14 @@ const UserDrones: React.FC = () => {
     }
   };
 
-  if (!drones.length) {
-    return <div className="text-white">No drones found.</div>;
-  }
-
-  const handleSaveEdit = async (droneId: string, updatedData: any) => {
+  const handleSaveEdit = async (droneId: string, updatedData: FormData) => {
     try {
-      const { data } = await axios.put(`http://localhost:5000/drone-listing/${droneId}`, updatedData);
+      const { data } = await axios.put(`http://localhost:5000/drone-listing/${droneId}`, updatedData, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`
+        }
+      });
+      console.log('JWT Token Edit:', jwtToken);
       setDrones(drones.map(drone => drone.droneId === droneId ? { ...drone, ...updatedData } : drone));
       setEditingDrone(null);
       alert("Drone updated successfully");
@@ -60,8 +66,12 @@ const UserDrones: React.FC = () => {
   };
 
   const navigateToNewOrder = () => {
-    router.push("user-drones/new-drone-order");
+    router.push("/marketplace/user-drones/new-drone-order");
   };
+
+  if (!drones.length) {
+    return <div className="text-white">No drones found.</div>;
+  }
 
   return (
     <div>
@@ -77,20 +87,16 @@ const UserDrones: React.FC = () => {
           <div key={drone.droneId} className="bg-gray-800 rounded-lg shadow-lg p-4">
             <h3 className="text-xl text-white font-semibold mb-2">{drone.title}</h3>
             <p className="text-gray-300">{drone.description}</p>
-            <div className="flex space-x-2 mt-4">
-              <button
-                onClick={() => handleEditClick(drone)}
-                className="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600 transition duration-300"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => handleDelete(drone.droneId)}
-                className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-300"
-              >
-                Delete
-              </button>
-            </div>
+            {drone.ownerWalletAddress === walletAddress && (
+              <div className="flex space-x-2 mt-4">
+                <button onClick={() => handleEditClick(drone)} className="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600 transition duration-300">
+                  Edit
+                </button>
+                <button onClick={() => handleDelete(drone.droneId)} className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-300">
+                  Delete
+                </button>
+              </div>
+            )}
           </div>
         ))}
       </div>

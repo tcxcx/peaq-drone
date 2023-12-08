@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import useWalletStore from "@/hooks/context/useWalletStore";
 
 interface Drone {
   droneId: string;
@@ -22,6 +23,8 @@ export const EditDroneModal: React.FC<EditDroneModalProps> = ({
   const [description, setDescription] = useState(drone.description);
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const { jwtToken } = useWalletStore.getState();
+
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {

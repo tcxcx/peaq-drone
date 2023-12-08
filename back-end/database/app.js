@@ -21,8 +21,11 @@ fs.mkdirSync(uploadsDir, { recursive: true });
 app.use(cors({
     origin: ['http://localhost:3000', 'http://localhost:5000', 'http://localhost:5001'],
     credentials: true,
+    exposedHeaders: ['Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     optionsSuccessStatus: 200
-}));
+  }));  
+  
 app.use(bodyParser.json());
 
 const droneList = require("./routes/drone-register/drone-listing");
