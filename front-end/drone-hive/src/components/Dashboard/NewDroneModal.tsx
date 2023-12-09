@@ -4,7 +4,7 @@ import React, { ChangeEvent, useState, useEffect } from "react";
 import axios from "axios";
 import useWalletStore from "@/hooks/context/useWalletStore";
 import { toast } from "sonner";
-import { generateSpheres, Sphere } from "./ProductCard";
+import { generateSpheres } from "./ProductCard";
 
 interface NewDroneModalProps {
   onClose: () => void;

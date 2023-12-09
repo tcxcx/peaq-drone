@@ -4,13 +4,12 @@ import { SectionWrapper } from "@/components/UI/Section";
 import React, { Suspense, useState } from "react";
 import useWalletStore from "@/hooks/context/useWalletStore";
 import { useRouter } from "next/navigation";
-import { Skeleton } from "../UI/SkeletonImg";
+import { SkeletonImg } from "../UI/SkeletonImg";
 import LazySpline from "./LazySpline";
 
 export function Hero() {
   const router = useRouter();
-  const { walletAddress, jwtToken, clearWallet } = useWalletStore();
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { walletAddress, jwtToken } = useWalletStore();
 
   const handleExploreClick = () => {
     if (walletAddress && jwtToken) {
@@ -56,7 +55,7 @@ export function Hero() {
               Experience next-gen delivery now
             </span>
           </div>
-          <Suspense fallback={<Skeleton className="w-full absolute h-screen z-10" />}>
+          <Suspense fallback={<SkeletonImg className="w-full absolute h-screen z-10" />}>
             <LazySpline />
           </Suspense>
         </div>
