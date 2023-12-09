@@ -4,6 +4,8 @@ import React, { ChangeEvent, useState, useEffect } from "react";
 import axios from "axios";
 import useWalletStore from "@/hooks/context/useWalletStore";
 import { toast } from "sonner";
+import { generateSpheres, Sphere } from "./ProductCard";
+
 interface NewDroneModalProps {
   onClose: () => void;
   onSave: (newData: FormData) => void;
@@ -13,64 +15,77 @@ export const NewDroneModal: React.FC<NewDroneModalProps> = ({
   onClose,
   onSave,
 }) => {
-    const { walletAddress } = useWalletStore();
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [image, setImage] = useState<File | null>(null);
-    const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const { walletAddress } = useWalletStore();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-    const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-      if (event.target.files && event.target.files.length > 0) {
-        const file = event.target.files[0];
-        if (file && file.type === "image/png") {
-          setImage(file);
-        } else {
-          toast.error("Please select a PNG image.");
+  const backgroundSpheres = generateSpheres(1000, [
+    "5px",
+    "3.5",
+    "1.25px",
+  ]).map((sphere, index) =>
+    React.cloneElement(sphere, {
+      style: {
+        ...sphere.props.style,
+        zIndex: -1,
+        opacity: 0.5,
+        animationDuration: `${60 + index * 10}s`,
+      },
+    })
+  );
+
+  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      if (file && file.type === "image/png") {
+        setImage(file);
+      } else {
+        toast.error("Please select a PNG image.");
+      }
+    }
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!walletAddress) {
+      toast.error("Wallet address is not available");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("ownerWalletAddress", walletAddress);
+    formData.append("title", title);
+    formData.append("description", description);
+    if (image) {
+      console.log("Uploading Image:", image.name);
+      formData.append("image", image);
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/drone-listing",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-      }
-    };
-  
-    const handleSubmit = async (event: React.FormEvent) => {
-      event.preventDefault();
-  
-      if (!walletAddress) {
-        toast.error("Wallet address is not available");
-        return;
-      }
-  
-      const formData = new FormData();
-      formData.append("ownerWalletAddress", walletAddress);
-      formData.append("title", title);
-      formData.append("description", description);
-      if (image) {
-        console.log("Uploading Image:", image.name);
-        formData.append("image", image);
-      }
-      
-  
-      try {
-        const response = await axios.post(
-          "http://localhost:5000/drone-listing",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-  
-        console.log(response.data);
-        setTitle("");
-        setDescription("");
-        setImage(null);
-        toast.success("Drone registered successfully!");
-        onClose()
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to register drone");
-      }
-    };
+      );
 
+      console.log(response.data);
+      setTitle("");
+      setDescription("");
+      setImage(null);
+      toast.success("Drone registered successfully!");
+      onClose();
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to register drone");
+    }
+  };
 
   useEffect(() => {
     if (image) {
@@ -84,13 +99,13 @@ export const NewDroneModal: React.FC<NewDroneModalProps> = ({
     }
   }, [image]);
 
-
   return (
     <div className="fixed inset-0 bg-black-tr bg-opacity-80 flex justify-center items-center z-50">
+      {backgroundSpheres}
       <div className="border glassmorphism border-basement-purple/30 p-10 rounded-lg shadow-lg">
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-          <label className="block text-white text-base font-bold mb-2 font-ribbon uppercase">
+            <label className="block text-white text-base font-bold mb-2 font-ribbon uppercase">
               Title:
             </label>
             <input
@@ -102,7 +117,7 @@ export const NewDroneModal: React.FC<NewDroneModalProps> = ({
             />
           </div>
           <div className="mb-4">
-          <label className="block text-white text-base font-bold mb-2 font-ribbon uppercase">
+            <label className="block text-white text-base font-bold mb-2 font-ribbon uppercase">
               Description:
             </label>
             <textarea

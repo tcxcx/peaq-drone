@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import useWalletStore from "@/hooks/context/useWalletStore";
+import { generateSpheres } from "./ProductCard";
 
 interface Drone {
   droneId: string;
@@ -14,6 +15,18 @@ interface EditDroneModalProps {
   onSave: (droneId: string, updatedData: FormData) => void;
 }
 
+const backgroundSpheres = generateSpheres(1000, ["5px", "3.5", "1.25px"]).map(
+  (sphere, index) =>
+    React.cloneElement(sphere, {
+      style: {
+        ...sphere.props.style,
+        zIndex: -1,
+        opacity: 0.5,
+        animationDuration: `${60 + index * 10}s`,
+      },
+    })
+);
+
 export const EditDroneModal: React.FC<EditDroneModalProps> = ({
   drone,
   onClose,
@@ -24,7 +37,6 @@ export const EditDroneModal: React.FC<EditDroneModalProps> = ({
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const { jwtToken } = useWalletStore.getState();
-
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -59,10 +71,12 @@ export const EditDroneModal: React.FC<EditDroneModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black-tr bg-opacity-80 flex justify-center items-center z-50">
+      {backgroundSpheres}
+
       <div className="border glassmorphism border-basement-purple/30 p-10 rounded-lg shadow-lg">
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-          <label className="block text-white text-base font-bold mb-2 font-ribbon uppercase">
+            <label className="block text-white text-base font-bold mb-2 font-ribbon uppercase">
               Title:
             </label>
             <input
@@ -74,7 +88,7 @@ export const EditDroneModal: React.FC<EditDroneModalProps> = ({
             />
           </div>
           <div className="mb-4">
-          <label className="block text-white text-base font-bold mb-2 font-ribbon uppercase">
+            <label className="block text-white text-base font-bold mb-2 font-ribbon uppercase">
               Description:
             </label>
             <textarea
@@ -149,4 +163,3 @@ export const EditDroneModal: React.FC<EditDroneModalProps> = ({
     </div>
   );
 };
-
