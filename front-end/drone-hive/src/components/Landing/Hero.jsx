@@ -1,10 +1,27 @@
-import Image from "next/image";
+"use client";
 
 import { SectionWrapper } from "@/components/UI/Section";
-
-// import appImage from "@/app/images/app.webp";
+import React, { Suspense, useState } from "react";
+import useWalletStore from "@/hooks/context/useWalletStore";
+import { useRouter } from "next/navigation";
+import { Skeleton } from "../UI/SkeletonImg";
+import LazySpline from "./LazySpline";
 
 export function Hero() {
+  const router = useRouter();
+  const { walletAddress, jwtToken, clearWallet } = useWalletStore();
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const handleExploreClick = () => {
+    if (walletAddress && jwtToken) {
+      // User is logged in
+      router.push("/marketplace");
+    } else {
+      // User is not logged in
+      router.push("/log-in");
+    }
+  };
+
   return (
     <div className="relative pt-32">
       <div className="pointer-events-none absolute inset-0 bg-center bg-grid-white/10 bg-grid-16 [mask-image:radial-gradient(white,transparent_85%)]"></div>
@@ -27,10 +44,10 @@ export function Hero() {
             </h2>
           </div>
 
-          <div className="mt-8 flex flex-col items-center justify-center gap-4 lg:flex-row">
+          <div className="my-8 flex flex-col items-center justify-center gap-4 lg:flex-row">
             <a
-              href="#"
-              className="inline-block uppercase rounded-full bg-white px-4 py-1.5 text-sm font-medium text-zinc-950 transition duration-300 hover:bg-zinc-300 font-ribbon"
+              onClick={handleExploreClick}
+              className="inline-block uppercase rounded-full bg-white px-4 py-1.5 text-sm font-medium text-zinc-950 transition duration-300 hover:bg-zinc-300 font-ribbon cursor-pointer" // Added cursor-pointer for better UX
             >
               Explore Drones
             </a>
@@ -39,21 +56,11 @@ export function Hero() {
               Experience next-gen delivery now
             </span>
           </div>
-
-          <div className="relative mx-auto mt-8 w-full max-w-5xl lg:mt-16">
-            <div className="absolute -top-8 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-white/25 blur-3xl lg:-top-8 lg:h-[32rem] lg:w-[32rem] lg:blur-[128px]"></div>
-
-            <div className="relative w-full rounded-2xl bg-gradient-to-b from-white/5 to-white/10 p-2 shadow-2xl shadow-white/10 ring-1 ring-white/10 backdrop-blur-sm lg:rounded-3xl">
-              {/* <Image
-                  className="h-auto w-full rounded-xl border border-white/10 shadow-md shadow-zinc-950/50 lg:rounded-2xl"
-                  alt="App screenshot"
-                  priority
-                  src={appImage}
-                /> */}
-            </div>
-          </div>
+          <Suspense fallback={<Skeleton className="w-full absolute h-screen z-10" />}>
+            <LazySpline />
+          </Suspense>
         </div>
-      </ SectionWrapper>
+      </SectionWrapper>
     </div>
   );
 }

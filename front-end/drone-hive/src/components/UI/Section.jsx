@@ -27,7 +27,7 @@ export function SectionWrapperRounded({ children, className, ...props }) {
 }
 
 export function SectionBadge({ children, className }) {
-  return <span className={clsx("text-sm tracking-tight text-accent-300 font-ribbon", className)}>{children}</span>
+  return <span className={clsx("text-sm tracking-tight text-accent-300 font-ribbon uppercase", className)}>{children}</span>
 }
 
 export function SectionDescription({ children, className }) {
@@ -66,7 +66,7 @@ export function SectionTitle({ children, className }) {
   return (
     <h2
       className={clsx(
-        "mt-4 text-left font-display text-2xl font-light leading-[1.125] text-basement-purple md:text-center md:text-4xl lg:text-5xl",
+        "mt-4 text-left font-display text-2xl font-light leading-[1.125] text-basement-tone-purple font-ribbon uppercase md:text-center md:text-4xl lg:text-5xl",
         className,
       )}>
       {children}

@@ -48,7 +48,7 @@ export function ScrollReveal({
 
   return (
     <Component ref={container} className={className} {...props}>
-      {isActive ? children : null}
+      {children(isActive)}
     </Component>
-  );  
+  )
 }

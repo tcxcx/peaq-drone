@@ -2,12 +2,12 @@
 
 import clsx from "clsx";
 import {
-  ChatBubbleLeftRightIcon,
   ClipboardDocumentCheckIcon,
-  DocumentIcon,
-  DocumentTextIcon,
   UserIcon,
+  CubeTransparentIcon,
 } from "@heroicons/react/24/outline";
+
+import { AlarmCheckIcon, PackageCheck, Bird, Atom, Boxes } from "lucide-react";
 
 import {
   SectionWrapper,
@@ -16,9 +16,10 @@ import {
   SectionTitle,
   SectionTitleFade,
   SectionDescription,
-} from "../UI/Section";
-import { ScrollReveal } from "../UI/ScrollReveal";
-import { SpotlightCard } from "../UI/SpotlightCard";
+} from "@/components/UI/Section";
+
+import { ScrollReveal } from "@/components/UI/ScrollReveal";
+import { SpotlightCard } from "@/components/UI/SpotlightCard";
 
 function FeatureCard({ children, className }) {
   return (
@@ -57,7 +58,7 @@ function DocumentsFeature({ className }) {
     <FeatureCard className={className}>
       <FeatureCardThumbnail>
         <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow">
-          <DocumentIcon className="relative h-8 w-8 fill-white/10 stroke-[1] text-white" />
+          <Bird className="relative h-8 w-8 fill-white/10 stroke-[1] text-white" />
         </div>
 
         <div className="w-[6.5rem] overflow-hidden">
@@ -71,16 +72,15 @@ function DocumentsFeature({ className }) {
         </div>
 
         <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow">
-          <ChatBubbleLeftRightIcon className="relative h-8 w-8 fill-cyan-400/10 stroke-[1] text-cyan-400" />
+          <Atom className="relative h-8 w-8 fill-cyan-400/10 stroke-[1] text-cyan-400" />
         </div>
       </FeatureCardThumbnail>
 
       <FeatureCardBody>
-        <FeatureCardTitle>Upload documents</FeatureCardTitle>
+        <FeatureCardTitle>Service your community</FeatureCardTitle>
         <FeatureCardDescription>
-          Place your shipping orders with just a few taps. Our intuitive DApp
-          interface simplifies the process of scheduling a drone pickup. Enter
-          your details, choose a time slot, and let our drones handle the rest.
+          Join the network by connecting your drone to Peaq Network and start
+          servicing your community with smart deliveries! Enjoy passive income with Drone Hive auto-pilot.
         </FeatureCardDescription>
       </FeatureCardBody>
     </FeatureCard>
@@ -108,7 +108,7 @@ function ResponsesFeature({ className }) {
         </div>
 
         <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
-          <ChatBubbleLeftRightIcon className="relative h-8 w-8 fill-cyan-400/10 stroke-[1] text-cyan-400" />
+          <AlarmCheckIcon className="relative h-8 w-8 fill-cyan-400/10 stroke-[1] text-cyan-400" />
         </div>
 
         <div className="w-9 overflow-hidden">
@@ -122,16 +122,16 @@ function ResponsesFeature({ className }) {
         </div>
 
         <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow">
-          <DocumentTextIcon className="relative h-8 w-8 fill-teal-400/10 stroke-[1] text-teal-400" />
+          <PackageCheck className="relative h-8 w-8 fill-teal-400/10 stroke-[1] text-teal-400" />
         </div>
       </FeatureCardThumbnail>
 
       <FeatureCardBody>
-        <FeatureCardTitle>Real-time responses</FeatureCardTitle>
+        <FeatureCardTitle>Effortless Order Placement</FeatureCardTitle>
         <FeatureCardDescription>
-          Stay updated with live tracking of your shipment. Our DApp provides
-          real-time updates and notifications, giving you peace of mind as you
-          monitor your drone-delivered parcels from departure to arrival.
+          Place your shipping orders with just a few taps. We simplify the
+          process of scheduling a drone pickup. Enter your details, choose a
+          time slot, and let our drones handle the rest.
         </FeatureCardDescription>
       </FeatureCardBody>
     </FeatureCard>
@@ -145,7 +145,7 @@ function ReferencesFeature({ className }) {
     <FeatureCard className={className}>
       <FeatureCardThumbnail>
         <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow">
-          <DocumentIcon className="relative h-8 w-8 fill-white/10 stroke-[1] text-white" />
+          <Boxes className="relative h-8 w-8 fill-white/10 stroke-[1] text-white" />
         </div>
 
         <div className="w-9 overflow-hidden">
@@ -159,7 +159,7 @@ function ReferencesFeature({ className }) {
         </div>
 
         <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
-          <DocumentTextIcon className="relative h-8 w-8 fill-green-400/10 stroke-[1] text-green-400" />
+          <CubeTransparentIcon className="relative h-8 w-8 fill-green-400/10 stroke-[1] text-green-400" />
         </div>
 
         <div className="w-9 overflow-hidden">
@@ -178,12 +178,11 @@ function ReferencesFeature({ className }) {
       </FeatureCardThumbnail>
 
       <FeatureCardBody>
-        <FeatureCardTitle>Secure & Reliable</FeatureCardTitle>
+        <FeatureCardTitle>Real-time Tracking</FeatureCardTitle>
         <FeatureCardDescription>
-          Security is our top priority. With advanced encryption and blockchain
-          technology, every shipment is secure and tamper-proof. Trust our
-          decentralized drone network for reliable and safe deliveries every
-          time.
+          Stay updated with live tracking of your shipment with real-time
+          updates and notifications, for your drone-delivered parcels from
+          departure to arrival.
         </FeatureCardDescription>
       </FeatureCardBody>
     </FeatureCard>
@@ -197,31 +196,25 @@ export function PrimaryFeatures() {
         {(isActive) => (
           <SectionWrapper>
             <SectionHeading>
-              <SectionBadge>
-                Empower Your Community {isActive ? "true" : "false"}{" "}
-              </SectionBadge>
+              <SectionBadge>Powered by Polkadot</SectionBadge>
 
               <SectionTitle>
-                Join the Drone Revolution <br />
-                <SectionTitleFade>with Peaq Network</SectionTitleFade>
+                Join the Drone Revolution
+                <SectionTitleFade>
+                  <br />
+                  with Peaq Network
+                </SectionTitleFade>
               </SectionTitle>
 
               <SectionDescription>
-                Imagine a world where drone deliveries are not just a
-                convenience but a sustainable business model for everyone. With
-                Peaq Network, this is now a reality. Purchase your drone,
-                receive it at your doorstep, and connect it to the Peaq Network
-                using a unique Machine ID. You're not just a user; you're a
-                service provider, contributing to a decentralized, worldwide
-                drone shipping network. Generate passive income by serving your
-                local area - a win-win for you and your community. Be part of
-                this groundbreaking movement towards efficient, eco-friendly,
-                and automated drone shipping services.
+                Drone Hive connects you to a decentralized drone Economy of
+                Things network.
                 <br className="hidden lg:block" />
                 Your journey towards revolutionizing delivery services starts
                 here!
               </SectionDescription>
             </SectionHeading>
+
             <div className="mt-8 grid gap-4 md:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-8">
               <DocumentsFeature
                 className={clsx(

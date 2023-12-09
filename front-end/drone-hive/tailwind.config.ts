@@ -19,6 +19,22 @@ const config: Config = {
         'basement-tone-purple': '#5e22f7',
         'black-tr': 'rgba(0, 0, 0, 0.95)',
       },
+
+      opacity: {
+        2.5: "0.025",
+        15: "0.15",
+      },
+
+      animation: {
+        marquee: "marquee 30s linear infinite",
+      },
+
+      keyframes: {
+        marquee: {
+          to: { transform: "translateX(-50%)" },
+        },
+      },
+      
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':

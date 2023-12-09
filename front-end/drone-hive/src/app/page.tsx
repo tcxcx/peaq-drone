@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect } from "react";// Assuming this is your button component
-import { Header } from "@/components/Landing/Header"
-import { Hero } from "@/components/Landing/Hero"
-import { PrimaryFeatures } from "@/components/Landing/PrimaryFeatures"
-
+import React from "react"; // Assuming this is your button component
+import { Header } from "@/components/Landing/Header";
+import { Hero } from "@/components/Landing/Hero";
+import { PrimaryFeatures } from "@/components/Landing/PrimaryFeatures";
 
 export default function Home() {
   return (
@@ -12,7 +11,6 @@ export default function Home() {
       <Header />
       <Hero />
       <PrimaryFeatures />
-
     </>
   );
 }
