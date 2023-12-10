@@ -10,18 +10,18 @@ The Decentralized Drone Delivery Management System (DDDMS) is a cutting-edge, bl
 
 - **User Registration and Drone Listing:** Users can register and list their drones, specifying details like specifications, availability, and service fees.
 - **Delivery Request and Matching:** Customers can place delivery requests; the system matches these with the best-suited drone.
-- **Real-Time Tracking:** GPS technology integration allows for real-time tracking of drones and deliveries.
-- **Blockchain Integration:** Secure and transparent transactions with blockchain technology using the Polkadot and Peaq SDK's for payment processing and drone identity verification.
+- **Real-Time Tracking:** GPS technology integration allows for real-time tracking of drones and deliveries (BACKLOG).
+- **Blockchain Integration:** Secure and transparent transactions with blockchain technology using the Polkadot and Peaq SDK's (BACKLOG) for payment processing and drone identity verification.
 - **Feedback and Rating System:** Post-delivery feedback mechanism for service improvement.
-- **Analytics Dashboard:** Data-driven insights for drone operators and administrators.
+- **Analytics Dashboard:** Data-driven insights for drone operators and administrators (BACKLOG).
 - **Docker Containerization:** The application is containerized using Docker for scalable and easy deployment.
 
 ## Technologies Used
 
-- **Frontend:** Next.js 14, Tailwind CSS, Framer Motion, SIWS Substrate Login.
-- **Backend:** Express.js, Supabase Storage, Database and Real-time features
-- **Blockchain:** Peaq Network javascript sdk.
-- **Others:** Redis (caching), Docker (containerization), Lightweight Charts (analytics), GPS and IoT integration (pending)
+- **Frontend:** Next.js 14, Tailwind CSS, Framer Motion, GSAP, SIWS Substrate Login.
+- **Backend:** Express.js, Supabase Storage and Database features
+- **Blockchain:** Substrate (Polkadot SDK) log ins with nonce and verify signature with JWT expiry for blockchain to back-end interactions, Peaq Network javascript sdk.
+- **Others:** Redis (caching  - pending), Docker (containerization), Lightweight Charts (analytics - pending), GPS and IoT integration (pending)
 
 ## Getting Started
 
