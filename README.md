@@ -52,6 +52,24 @@ The **Docker** setup for the DroneHive project includes configurations for both 
 
 4. Wait for both Next.js and Express.js microservices to run in port :3000 and :5000 respectively.
 
+
+### Clone Repo Instructions 
+Front-end node =18
+Run the following command in the terminal:
+
+   ```bash
+   yarn dev
+
+   ```
+
+1. Back-end node =18
+2. Run the following command in the terminal:
+
+   ```bash
+   npm start
+
+   ```
+
 ### Development Environment Installation
 
 1. Clone the repository:
