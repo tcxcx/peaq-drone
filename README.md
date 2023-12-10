@@ -1,3 +1,6 @@
+[![DRONE-HIVE]]([https://github.com/studio-freight/satus](https://github.com/tcxcx/peaq-drone/blob/main/drone-banner.jpg))
+
+
 # DroneHive
 
 ## A Decentralized Drone Delivery Management System (DDDMS) for Machine IDs
