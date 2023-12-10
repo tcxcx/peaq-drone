@@ -61,9 +61,8 @@ Run the following command in the terminal:
    yarn dev
 
    ```
-
-1. Back-end node =18
-2. Run the following command in the terminal:
+Back-end node =18
+Run the following command in the terminal:
 
    ```bash
    npm start
