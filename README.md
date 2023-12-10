@@ -18,7 +18,7 @@ The Decentralized Drone Delivery Management System (DDDMS) is a cutting-edge, bl
 
 ## Technologies Used
 
-- **Frontend:** Next.js 14, Tailwind CSS, Framer Motion, GSAP, SIWS Substrate Login.
+- **Frontend:** Next.js 14, Tailwind CSS, Framer Motion, GSAP, Spline, SIWS Substrate Login.
 - **Backend:** Express.js, Supabase Storage and Database features
 - **Blockchain:** Substrate (Polkadot SDK) log ins with nonce and verify signature with JWT expiry for blockchain to back-end interactions, Peaq Network javascript sdk.
 - **Others:** Redis (caching  - pending), Docker (containerization), Lightweight Charts (analytics - pending), GPS and IoT integration (pending)
