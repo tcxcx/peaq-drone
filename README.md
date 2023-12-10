@@ -1,4 +1,4 @@
-[![DRONE-HIVE]]([https://github.com/studio-freight/satus](https://github.com/tcxcx/peaq-drone/blob/main/drone-banner.jpg))
+[![DRONE-HIVE]]([https://raw.githubusercontent.com/tcxcx/peaq-drone/main/drone-banner.jpg])
 
 
 # DroneHive
