@@ -6,8 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import DroneOrderModal from "@/components/Order/DroneOrderModal";
 import useWalletStore from "@/hooks/context/useWalletStore";
-import OrderId from "./[orderId]/page";
-
+import GlassSpotCard from "@/components/Charts/GlassSpotCard";
 const MyOrders = () => {
   const router = useRouter();
   const [showOrderProcess, setShowOrderProcess] = useState(false);
@@ -55,7 +54,7 @@ const MyOrders = () => {
               key={order.orderId}
               onClick={() => goToSpecificOrder(order.orderId)}
             >
-              <div className="border rounded p-4 mb-4">
+              <GlassSpotCard>
                 <h2 className="text-lg font-bold mb-2">
                   Order {order.orderId}
                 </h2>
@@ -65,7 +64,7 @@ const MyOrders = () => {
                   <li>Order Status: {order.orderStatus}</li>
                   <li>Created At: {order.createdAt}</li>
                 </ul>
-              </div>{" "}
+              </GlassSpotCard>
             </div>
           ))
         ) : (
