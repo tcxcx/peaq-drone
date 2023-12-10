@@ -1,4 +1,4 @@
-[![DRONE-HIVE]]([https://raw.githubusercontent.com/tcxcx/peaq-drone/main/drone-banner.jpg])
+![DRONE-HIVE](https://raw.githubusercontent.com/tcxcx/peaq-drone/main/drone-banner.jpg)
 
 
 # DroneHive
