@@ -6,6 +6,7 @@ import {
   rotateAnticlockwise,
 } from "@/components/UI/Keyframes";
 import styled, { keyframes } from "styled-components";
+import { useRouter } from "next/navigation";
 
 export interface ProductCardProps {
   droneId: string;
@@ -21,6 +22,7 @@ interface SphereProps extends React.HTMLAttributes<HTMLDivElement> {
     borderWidth: string;
   }
   
+
 
 const borderWidths = ["1.125px", "2.15px", "1.125px", "0.5px"];
 
@@ -138,6 +140,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const getPolkascanUrl = (walletAddress: string) => {
     return `https://polkascan.io/${network}/account/${walletAddress}`;
   };
+  const router = useRouter();
+  
+  const handleClick = () => {
+    router.push(`/marketplace/drone-analytics/${droneId}`);
+  };
 
   // Initial size for the outermost sphere
   const initialSize = 180;
@@ -190,7 +197,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           />
         )}
       </StaticSphere>
-      <button className="bg-transparent border hover:animate-pulse border-basement-purple hover:bg-basement-purple/20 text-white font-bold py-2 px-4 rounded uppercase font-ribbon text-sm">
+      <button onClick={handleClick}  className="bg-transparent border hover:animate-pulse border-basement-purple hover:bg-basement-purple/20 text-white font-bold py-2 px-4 rounded uppercase font-ribbon text-sm">
         View details
       </button>
       <a

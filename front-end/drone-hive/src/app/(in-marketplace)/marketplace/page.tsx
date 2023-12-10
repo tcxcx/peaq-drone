@@ -3,7 +3,6 @@
 import React from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import truncateMiddle from "truncate-middle";
 import { Skeleton } from "@/components/UI/skeleton";
 import ProductCard from "@/components/Dashboard/ProductCard";
 
@@ -14,8 +13,6 @@ export interface DronesListed {
   description: string;
   imageUrl?: string;
 }
-
-// ... other imports remain unchanged
 
 const Marketplace: React.FC = () => {
   const { data, isLoading } = useQuery({

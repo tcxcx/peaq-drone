@@ -30,9 +30,13 @@ app.use(bodyParser.json());
 
 const droneList = require("./routes/drone-register/drone-listing");
 const droneReview = require("./routes/drone-register/drone-review");
+const orders = require("./routes/orders/order-request");
+
 
 app.use('/drone-listing', droneList);
 app.use('/drone-review', droneReview);
+app.use('/orders', orders);
+
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

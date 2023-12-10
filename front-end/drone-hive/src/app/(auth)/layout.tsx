@@ -2,6 +2,7 @@
 
 import { Application } from "@splinetool/runtime";
 import React, { useEffect, useRef } from "react";
+import BackRoute from "@/components/UI/BackRoute";
 
 export default function AuthLayout({
   children,
@@ -19,6 +20,10 @@ export default function AuthLayout({
 
   return (
     <>
+      <div className="pl-4 pt-4">
+        <BackRoute text="/" className="absolute top-20 left-20 z-10" />
+      </div>
+
       {/* Left panel component */}
       <div className="flex flex-col md:flex-row h-screen">
         <div className="w-full h-full lg:w-1/2 py-0 px-10 bg-zinc-900/5">
