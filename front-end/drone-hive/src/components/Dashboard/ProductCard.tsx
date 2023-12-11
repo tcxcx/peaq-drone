@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 export interface ProductCardProps {
   droneId: string;
   ownerWalletAddress: string;
-  title: string;
+  name: string;
   description: string;
   imageUrl?: string;
   network: string;
@@ -132,7 +132,7 @@ export const generateSpheres = (size: number, borderWidths: string[]) => {
 export const ProductCard: React.FC<ProductCardProps> = ({
   droneId,
   ownerWalletAddress,
-  title,
+  name,
   description,
   imageUrl,
   network,
@@ -172,7 +172,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       {/* Static Sphere with Image */}
       {/* Rest of the card content */}
       <div className="flex-grow mb-4">
-        <h3 className="text-xl font-ribbon font-semibold mb-2">{title}</h3>
+        <h3 className="text-xl font-ribbon font-semibold mb-2">{name}</h3>
         <p className="text-gray-600">{description}</p>
       </div>
       <StaticSphere
@@ -184,7 +184,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {imageUrl && (
           <img
             src={imageUrl}
-            alt={title}
+            alt={name}
             className="w-full h-auto object-cover p-1 rounded-full"
             style={{
               position: "absolute",

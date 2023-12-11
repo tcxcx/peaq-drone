@@ -11,7 +11,7 @@ import { NewDroneModal } from "@/components/Dashboard/NewDroneModal";
 
 type Drone = {
   droneId: string;
-  title: string;
+  name: string;
   description: string;
   ownerWalletAddress: string;
   imageUrl?: string;
@@ -81,13 +81,13 @@ const UserDrones: React.FC = () => {
             {drone.imageUrl && (
               <img
                 src={drone.imageUrl}
-                alt={drone.title}
+                alt={drone.name}
                 className="mb-4 w-full h-48 object-cover rounded"
               />
             )}
             <div className="flex-grow mb-4">
               <h3 className="text-xl font-ribbon font-semibold mb-2 text-white">
-                {drone.title}
+                {drone.name}
               </h3>
               <p className="text-gray-300">{drone.description}</p>
             </div>
@@ -114,7 +114,7 @@ const UserDrones: React.FC = () => {
         <EditDroneModal
           drone={{
             droneId: editingDrone.droneId,
-            title: editingDrone.title,
+            name: editingDrone.name,
             description: editingDrone.description,
             imageUrl: editingDrone.imageUrl || "",
           }}

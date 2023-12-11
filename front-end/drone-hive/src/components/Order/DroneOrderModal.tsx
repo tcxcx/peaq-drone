@@ -13,7 +13,7 @@ interface DroneOrderModalProps {
 
 interface DronesListed {
   droneId: string;
-  title: string;
+  name: string;
   description: string;
 }
 
@@ -109,7 +109,7 @@ const DroneOrderModal: React.FC<DroneOrderModalProps> = ({ onClose }) => {
                       value={drone.droneId}
                       className="text-black"
                     >
-                      {drone.title}
+                      {drone.name}
                     </option>
                   ))}
               </select>

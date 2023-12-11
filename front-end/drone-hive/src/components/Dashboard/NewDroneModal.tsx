@@ -5,7 +5,7 @@ import axios from "axios";
 import useWalletStore from "@/hooks/context/useWalletStore";
 import { toast } from "sonner";
 import { generateSpheres } from "./ProductCard";
-
+import { createPeaqDID } from "@/hooks/CRUD/createPeaqDID";
 interface NewDroneModalProps {
   onClose: () => void;
   onSave: (newData: FormData) => void;
@@ -16,24 +16,22 @@ export const NewDroneModal: React.FC<NewDroneModalProps> = ({
   onSave,
 }) => {
   const { walletAddress } = useWalletStore();
-  const [title, setTitle] = useState("");
+  const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [machineId, setMachineId] = useState<string | null>(null);
 
-  const backgroundSpheres = generateSpheres(1000, [
-    "5px",
-    "3.5",
-    "1.25px",
-  ]).map((sphere, index) =>
-    React.cloneElement(sphere, {
-      style: {
-        ...sphere.props.style,
-        zIndex: -1,
-        opacity: 0.5,
-        animationDuration: `${60 + index * 10}s`,
-      },
-    })
+  const backgroundSpheres = generateSpheres(1000, ["5px", "3.5", "1.25px"]).map(
+    (sphere, index) =>
+      React.cloneElement(sphere, {
+        style: {
+          ...sphere.props.style,
+          zIndex: -1,
+          opacity: 0.5,
+          animationDuration: `${60 + index * 10}s`,
+        },
+      })
   );
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +44,6 @@ export const NewDroneModal: React.FC<NewDroneModalProps> = ({
       }
     }
   };
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -55,34 +52,43 @@ export const NewDroneModal: React.FC<NewDroneModalProps> = ({
       return;
     }
 
-    const formData = new FormData();
-    formData.append("ownerWalletAddress", walletAddress);
-    formData.append("title", title);
-    formData.append("description", description);
-    if (image) {
-      console.log("Uploading Image:", image.name);
-      formData.append("image", image);
+    if (!name) {
+      toast.error("Name is required for MachineID creation");
+      return;
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/drone-listing",
-        formData,
-        {
+      const newMachineId = await createPeaqDID(name);
+
+      if (newMachineId) {
+        console.log(`Created peaq DID: ${newMachineId}`);
+        setMachineId(newMachineId.toString());
+
+        const formData = new FormData();
+        formData.append("ownerWalletAddress", walletAddress);
+        formData.append("name", name);
+        formData.append("description", description);
+        formData.append("machineId", newMachineId.toString());
+        if (image) {
+          formData.append("image", image);
+        }
+
+        await axios.post("http://localhost:5000/drone-listing", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
-      );
+        });
 
-      console.log(response.data);
-      setTitle("");
-      setDescription("");
-      setImage(null);
-      toast.success("Drone registered successfully!");
-      onClose();
+        setName("");
+        setDescription("");
+        setImage(null);
+        toast.success("Drone registered successfully!");
+        onClose();
+      } else {
+        throw new Error("DID creation did not return a valid ID.");
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Error creating peaq DID:", error);
       toast.error("Failed to register drone");
     }
   };
@@ -106,12 +112,12 @@ export const NewDroneModal: React.FC<NewDroneModalProps> = ({
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-white text-base font-bold mb-2 font-ribbon uppercase">
-              Title:
+              Name:
             </label>
             <input
               type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="appearance-none border border-basement-purple/50 focus:border-basement-purple/90 hover:bg-basement-purple/10 focus:bg-basement-purple/10  rounded w-full py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline bg-transparent text-white"
               required
             />

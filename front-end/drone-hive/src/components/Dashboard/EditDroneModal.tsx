@@ -4,7 +4,7 @@ import { generateSpheres } from "./ProductCard";
 
 interface Drone {
   droneId: string;
-  title: string;
+  name: string;
   description: string;
   imageUrl: string;
 }
@@ -32,7 +32,7 @@ export const EditDroneModal: React.FC<EditDroneModalProps> = ({
   onClose,
   onSave,
 }) => {
-  const [title, setTitle] = useState(drone.title);
+  const [name, setName] = useState(drone.name);
   const [description, setDescription] = useState(drone.description);
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -48,7 +48,7 @@ export const EditDroneModal: React.FC<EditDroneModalProps> = ({
     event.preventDefault();
 
     const formData = new FormData();
-    formData.append("title", title);
+    formData.append("name", name);
     formData.append("description", description);
     if (image) {
       formData.append("image", image);
@@ -77,12 +77,12 @@ export const EditDroneModal: React.FC<EditDroneModalProps> = ({
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-white text-base font-bold mb-2 font-ribbon uppercase">
-              Title:
+              Name:
             </label>
             <input
               type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="appearance-none border border-basement-purple/50 focus:border-basement-purple/90 hover:bg-basement-purple/10 focus:bg-basement-purple/10  rounded w-full py-2 px-3 text-white-700 leading-tight focus:outline-none focus:shadow-outline bg-transparent text-white"
               required
             />

@@ -35,10 +35,10 @@ export const SignIn: React.FC<Props> = ({ accounts, onCancel, onSignedIn }) => {
       const siwsMessage = new SiwsMessage({
         domain: SIWS_DOMAIN,
         uri: SIWS_DOMAIN,
-        // use prefix of chain your dapp is on:
-        address: address.toSs58(0),
+        // use prefix of Agung Testnet
+        address: address.toSs58(9990),
         nonce,
-        statement: "",
+        statement: "Connect to Peaq Network's testnet - Agung",
         chainName: "Polkadot",
         // expires in 15 mins
         expirationTime: new Date().getTime() + 15 * 60 * 1000,

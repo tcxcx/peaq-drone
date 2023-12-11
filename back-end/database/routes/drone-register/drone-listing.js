@@ -50,8 +50,9 @@ router.post(
   "/",
   upload.single("image"),
   body("ownerWalletAddress").isString(),
-  body("title").isString(),
+  body("name").isString(),
   body("description").isString(),
+  body("machineId").isString(),
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -69,10 +70,10 @@ router.post(
     }
 
     try {
-      const { ownerWalletAddress, title, description } = req.body;
+      const { ownerWalletAddress, name, description, machineId } = req.body;
       const { data, error } = await supabase
         .from("Drones")
-        .insert([{ ownerWalletAddress, title, description, imagePath }]);
+        .insert([{ ownerWalletAddress, name, description, machineId, imagePath }]);
       if (error) throw error;
       res.status(201).json(data);
     } catch (error) {
@@ -84,7 +85,7 @@ router.post(
 // Update a Drone
 router.put("/:droneId", verifyToken, upload.single("image"), async (req, res) => {
   const { droneId } = req.params;
-  const { title, description } = req.body;
+  const { name, description } = req.body;
 
   // Fetch current drone data
   const { data: currentDrone, error: droneFetchError } = await supabase
@@ -102,7 +103,7 @@ router.put("/:droneId", verifyToken, upload.single("image"), async (req, res) =>
     return res.status(403).json({ error: "Unauthorized to update this drone" });
   }
 
-  let updates = { title, description };
+  let updates = { name, description };
   if (req.file) {
     // Handle image upload
     try {
