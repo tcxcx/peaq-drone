@@ -9,7 +9,7 @@ import ProductCard from "@/components/Dashboard/ProductCard";
 export interface DronesListed {
   droneId: string;
   ownerWalletAddress: string;
-  title: string;
+  name: string;
   description: string;
   imageUrl?: string;
 }

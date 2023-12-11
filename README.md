@@ -7,15 +7,15 @@
 
 ## Overview
 
-The Decentralized Drone Delivery Management System (DDDMS) is a cutting-edge, blockchain-enabled platform designed to revolutionize the logistics industry. This peer-to-peer system allows users to autonomously enlist their drones for various delivery tasks, creating an efficient and decentralized delivery network. Leveraging GPS, IoT, and blockchain technologies, DDDMS aims to provide secure, transparent, and reliable delivery services.
+The Decentralized Drone Delivery Management System (DDDMS) is a cutting-edge, blockchain-enabled platform designed to revolutionize the logistics industry. This peer-to-peer system allows users to autonomously enlist their drones for various delivery tasks, creating an efficient and decentralized delivery network. Leveraging DIDs, and blockchain technologies, DDDMS aims to provide secure, transparent, and reliable delivery services.
 
 ## Key Features
 
 - **User Registration and Drone Listing:** Users can register and list their drones, specifying details like specifications, availability, and service fees.
 - **Delivery Request and Matching:** Customers can place delivery requests; the system matches these with the best-suited drone.
-- **Real-Time Tracking:** GPS technology integration allows for real-time tracking of drones and deliveries (BACKLOG).
-- **Blockchain Integration:** Secure and transparent transactions with blockchain technology using the Polkadot and Peaq SDK's (BACKLOG) for payment processing and drone identity verification.
+- **Blockchain Integration:** Secure and transparent transactions with blockchain technology using the Polkadot and Peaq SDK's for payment processing and drone identity verification. Creation of Machine DID (Decentralized Identifiers) for every new drone registered using the Peaq Network JS SDK.
 - **Feedback and Rating System:** Post-delivery feedback mechanism for service improvement.
+- **Real-Time Tracking:** GPS technology integration allows for real-time tracking of drones and deliveries (BACKLOG).
 - **Analytics Dashboard:** Data-driven insights for drone operators and administrators (BACKLOG).
 - **Docker Containerization:** The application is containerized using Docker for scalable and easy deployment.
 
@@ -82,6 +82,11 @@ Run the following command in the terminal:
 ### Honorable Mentions
 
 Special thanks for the inspiration to the teams at:
+
+- **Peaq Network**
+
+  - **GitHub**: [Peaq Network GitHub](https://github.com/peaqnetwork)
+  - **Website**: [Peaq Network Official Website](https://www.peaq.network/)
 
 - **SIWS Talisman**
 

@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import DroneOrderModal from "@/components/Order/DroneOrderModal";
 import useWalletStore from "@/hooks/context/useWalletStore";
 import GlassSpotCard from "@/components/Charts/GlassSpotCard";
+import Spinner from "@/components/Landing/Spinner";
+
 const MyOrders = () => {
   const router = useRouter();
   const [showOrderProcess, setShowOrderProcess] = useState(false);
@@ -47,7 +49,7 @@ const MyOrders = () => {
         {showOrderProcess && <DroneOrderModal onClose={handleCloseModal} />}
         <h1 className="text-xl font-semibold my-4">Your Order History</h1>
         {isLoading ? (
-          <p>Loading orders...</p>
+          <Spinner />
         ) : orders && Array.isArray(orders.data) ? (
           orders.data.map((order) => (
             <div

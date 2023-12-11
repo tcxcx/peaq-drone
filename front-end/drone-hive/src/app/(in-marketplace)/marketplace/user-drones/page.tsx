@@ -8,10 +8,11 @@ import useDroneActions from "@/hooks/CRUD/useDroneActions.js";
 import useFetchUserDrones from "@/hooks/CRUD/useFetchUserDrones";
 import { Skeleton } from "@/components/UI/skeleton";
 import { NewDroneModal } from "@/components/Dashboard/NewDroneModal";
+import DroneItem from "@/components/Dashboard/DroneItem";
 
 type Drone = {
   droneId: string;
-  name: string;
+  title: string;
   description: string;
   ownerWalletAddress: string;
   imageUrl?: string;
@@ -47,10 +48,9 @@ const UserDrones: React.FC = () => {
   const navigateToNewOrder = () => {
     router.push("/marketplace/user-drones/new-drone-order");
   };
-  
 
   if (isLoading) {
-    const skeletonCount = 4; // Declare skeletonCount before using it
+    const skeletonCount = 4;
     return (
       <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {Array.from({ length: skeletonCount }, (_, index) => (
@@ -73,48 +73,25 @@ const UserDrones: React.FC = () => {
         >
           Create New Drone
         </button>
-        {drones.map((drone: Drone) => (
-          <div
+        {drones.map((drone) => (
+          <DroneItem
             key={drone.droneId}
-            className="bg-transparent border border-white rounded-lg shadow-md p-4 flex flex-col"
-          >
-            {drone.imageUrl && (
-              <img
-                src={drone.imageUrl}
-                alt={drone.name}
-                className="mb-4 w-full h-48 object-cover rounded"
-              />
-            )}
-            <div className="flex-grow mb-4">
-              <h3 className="text-xl font-ribbon font-semibold mb-2 text-white">
-                {drone.name}
-              </h3>
-              <p className="text-gray-300">{drone.description}</p>
-            </div>
-            {drone.ownerWalletAddress === walletAddress && (
-              <div className="flex space-x-2 mt-4 justify-end">
-                <button
-                  onClick={() => handleEditClick(drone)}
-                  className="bg-transparent border font-ribbon uppercase hover:animate-pulse border-basement-purple hover:bg-basement-purple/20 text-white font-bold py-2 px-4 rounded"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(drone.droneId)}
-                  className="bg-transparent border font-ribbon uppercase hover:animate-pulse border-basement-purple hover:bg-basement-purple/20 text-white font-bold py-2 px-4 rounded"
-                >
-                  Delete
-                </button>
-              </div>
-            )}
-          </div>
+            drone={{
+              ...drone,
+              name: drone.title,
+              imageUrl: drone.imageUrl || "",
+            }}
+            onEdit={() => handleEditClick(drone)}
+            onDelete={() => handleDelete(drone.droneId)}
+            isOwner={drone.ownerWalletAddress === walletAddress}
+          />
         ))}
       </div>
       {editingDrone && (
         <EditDroneModal
           drone={{
             droneId: editingDrone.droneId,
-            name: editingDrone.name,
+            name: editingDrone.title,
             description: editingDrone.description,
             imageUrl: editingDrone.imageUrl || "",
           }}

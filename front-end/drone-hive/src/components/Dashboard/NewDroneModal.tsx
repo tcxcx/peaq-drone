@@ -8,9 +8,11 @@ import { generateSpheres } from "./ProductCard";
 import { createPeaqDID } from "@/hooks/CRUD/createPeaqDID";
 import Spinner from '@/components/Landing/Spinner'
 
+
 interface NewDroneModalProps {
   onClose: () => void;
   onSave: (newData: FormData) => void;
+
 }
 
 export const NewDroneModal: React.FC<NewDroneModalProps> = ({
