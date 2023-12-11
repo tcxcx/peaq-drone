@@ -1,6 +1,8 @@
 import { Sdk } from "@peaq-network/sdk";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 
+
+// If console shows error insufficent funds, add your wallet seed phrase and get in funded in the peaq network discord server's faucet
 const mnemonicSeed = process.env.NEXT_PUBLIC_POLKADOT_DEV_PHRASE;
 
 export const createPeaqDID = async (name) => {

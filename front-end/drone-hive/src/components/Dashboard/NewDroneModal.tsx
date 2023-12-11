@@ -6,6 +6,8 @@ import useWalletStore from "@/hooks/context/useWalletStore";
 import { toast } from "sonner";
 import { generateSpheres } from "./ProductCard";
 import { createPeaqDID } from "@/hooks/CRUD/createPeaqDID";
+import Spinner from '@/components/Landing/Spinner'
+
 interface NewDroneModalProps {
   onClose: () => void;
   onSave: (newData: FormData) => void;
@@ -21,6 +23,7 @@ export const NewDroneModal: React.FC<NewDroneModalProps> = ({
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [machineId, setMachineId] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const backgroundSpheres = generateSpheres(1000, ["5px", "3.5", "1.25px"]).map(
     (sphere, index) =>
@@ -46,6 +49,7 @@ export const NewDroneModal: React.FC<NewDroneModalProps> = ({
   };
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setIsSubmitting(true);
 
     if (!walletAddress) {
       toast.error("Wallet address is not available");
@@ -91,6 +95,7 @@ export const NewDroneModal: React.FC<NewDroneModalProps> = ({
       console.error("Error creating peaq DID:", error);
       toast.error("Failed to register drone");
     }
+    setIsSubmitting(false);
   };
 
   useEffect(() => {
@@ -180,18 +185,26 @@ export const NewDroneModal: React.FC<NewDroneModalProps> = ({
           </div>
 
           <div className="flex justify-end gap-4 pt-4">
-            <button
-              onClick={onClose}
-              className="bg-transparent border font-ribbon uppercase hover:animate-pulse border-basement-purple hover:bg-basement-purple/20 text-white font-bold py-2 px-4 rounded"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-transparent border font-ribbon uppercase hover:animate-pulse border-basement-purple hover:bg-basement-purple/20 text-white font-bold py-2 px-4 rounded"
-            >
-              Save
-            </button>
+          {isSubmitting ? (
+            <Spinner />
+          ) : (
+            <div className="flex justify-end gap-4 pt-4">
+              <button
+                onClick={onClose}
+                className="bg-transparent border font-ribbon uppercase hover:animate-pulse border-basement-purple hover:bg-basement-purple/20 text-white font-bold py-2 px-4 rounded"
+                disabled={isSubmitting}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-transparent border font-ribbon uppercase hover:animate-pulse border-basement-purple hover:bg-basement-purple/20 text-white font-bold py-2 px-4 rounded"
+                disabled={isSubmitting}
+              >
+                Save
+              </button>
+            </div>
+          )}
           </div>
         </form>
       </div>
