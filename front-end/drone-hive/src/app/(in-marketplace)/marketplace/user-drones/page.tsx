@@ -9,6 +9,7 @@ import useFetchUserDrones from "@/hooks/CRUD/useFetchUserDrones";
 import { Skeleton } from "@/components/UI/skeleton";
 import { NewDroneModal } from "@/components/Dashboard/NewDroneModal";
 import DroneItem from "@/components/Dashboard/DroneItem";
+import { toast } from "sonner";
 
 type Drone = {
   droneId: string;
@@ -42,7 +43,11 @@ const UserDrones: React.FC = () => {
   };
 
   const handleDelete = async (droneId: string) => {
-    await deleteDroneById(droneId);
+    try {
+      await deleteDroneById(droneId);
+    } catch (error) {
+      console.error("Error deleting drone:", error);
+    }
   };
 
   const navigateToNewOrder = () => {

@@ -15,14 +15,13 @@ export interface ProductCardProps {
   description: string;
   imageUrl?: string;
   network: string;
+  machineId: string;
 }
 interface SphereProps extends React.HTMLAttributes<HTMLDivElement> {
-    direction: 'clockwise' | 'anticlockwise';
-    color: string;
-    borderWidth: string;
-  }
-  
-
+  direction: "clockwise" | "anticlockwise";
+  color: string;
+  borderWidth: string;
+}
 
 const borderWidths = ["1.125px", "2.15px", "1.125px", "0.5px"];
 
@@ -124,7 +123,7 @@ export const generateSpheres = (size: number, borderWidths: string[]) => {
         }}
       />
     );
-    size -= parseInt(borderWidth, 10) * 2 + spacing; 
+    size -= parseInt(borderWidth, 10) * 2 + spacing;
   }
   return spheres;
 };
@@ -136,12 +135,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   description,
   imageUrl,
   network,
+  machineId,
 }) => {
   const getPolkascanUrl = (walletAddress: string) => {
     return `https://polkascan.io/${network}/account/${walletAddress}`;
   };
   const router = useRouter();
-  
+
   const handleClick = () => {
     router.push(`/marketplace/drone-analytics/${droneId}`);
   };
@@ -197,7 +197,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           />
         )}
       </StaticSphere>
-      <button onClick={handleClick}  className="bg-transparent border hover:animate-pulse border-basement-purple hover:bg-basement-purple/20 text-white font-bold py-2 px-4 rounded uppercase font-ribbon text-sm">
+      <button
+        onClick={handleClick}
+        className="bg-transparent border hover:animate-pulse border-basement-purple hover:bg-basement-purple/20 text-white font-bold py-2 px-4 rounded uppercase font-ribbon text-sm"
+      >
         View details
       </button>
       <a
@@ -208,6 +211,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       >
         <span className="uppercase text-basement-green">owner:</span>{" "}
         {truncateMiddle(ownerWalletAddress, 5, 5, "...")}
+      </a>
+
+      <a
+        href={getPolkascanUrl(ownerWalletAddress)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-basement-indigo hover:underline text-xs mt-2 font-ribbon up text-right"
+      >
+        <span className="uppercase text-basement-green">Machine DID:</span>{" "}
+        {truncateMiddle(machineId, 5, 5, "...")}
       </a>
     </div>
   );

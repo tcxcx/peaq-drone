@@ -12,6 +12,7 @@ export interface DronesListed {
   name: string;
   description: string;
   imageUrl?: string;
+  machineId: string;
 }
 
 const Marketplace: React.FC = () => {
